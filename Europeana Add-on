@@ -1,0 +1,135 @@
+bl_info = {
+    "name": "Europeana Image Importer",
+    "blender": (2, 80, 0),
+    "category": "Import-Export",
+}
+
+import bpy
+import requests
+import os
+from bpy_extras.image_utils import load_image
+
+# API Configuration
+EUROPEANA_API_KEY = "nanodydecti"  # Replace with your Europeana API Key
+EUROPEANA_SEARCH_URL = "https://api.europeana.eu/record/v2/search.json"
+
+# Store search results
+image_data_cache = []
+
+class FetchEuropeanaImagesOperator(bpy.types.Operator):
+    """Fetch Images from Europeana"""
+    bl_idname = "image.fetch_europeana"
+    bl_label = "Search Europeana"
+
+    query: bpy.props.StringProperty(name="Search Query", default="art")
+
+    def execute(self, context):
+        global image_data_cache
+        image_data_cache.clear()
+
+        params = {
+            "wskey": EUROPEANA_API_KEY,
+            "query": self.query,
+            "media": "true",  # Ensure we get images
+            "rows": 6,  # Number of results
+        }
+
+        try:
+            response = requests.get(EUROPEANA_SEARCH_URL, params=params)
+            if response.status_code == 200:
+                results = response.json().get("items", [])
+                
+                for item in results:
+                    if "edmPreview" in item and "edmIsShownBy" in item:
+                        image_data_cache.append({
+                            "thumb_url": item["edmPreview"],  # Thumbnail URL
+                            "full_url": item["edmIsShownBy"]   # Full image URL
+                        })
+            else:
+                self.report({'ERROR'}, "Failed to fetch images")
+                return {'CANCELLED'}
+        except Exception as e:
+            self.report({'ERROR'}, f"API Error: {e}")
+            return {'CANCELLED'}
+
+        return {'FINISHED'}
+
+class ImportEuropeanaImageOperator(bpy.types.Operator):
+    """Import Selected Image as a Plane"""
+    bl_idname = "image.import_europeana"
+    bl_label = "Import Image"
+
+    image_url: bpy.props.StringProperty()
+
+    def execute(self, context):
+        image_path = self.download_image(self.image_url)
+        if not image_path:
+            self.report({'ERROR'}, "Image download failed")
+            return {'CANCELLED'}
+
+        self.import_image_as_plane(context, image_path)
+        return {'FINISHED'}
+
+    def download_image(self, url):
+        """Download Image from Europeana"""
+        try:
+            response = requests.get(url, stream=True)
+            if response.status_code == 200:
+                img_name = "europeana_image.jpg"
+                img_path = os.path.join(bpy.app.tempdir, img_name)
+
+                with open(img_path, "wb") as f:
+                    for chunk in response.iter_content(1024):
+                        f.write(chunk)
+
+                return img_path
+        except Exception as e:
+            print(f"Download Error: {e}")
+        return None
+
+    def import_image_as_plane(self, context, image_path):
+        """Import Image as Plane"""
+        bpy.ops.import_image.to_plane(files=[{"name": os.path.basename(image_path)}], directory=os.path.dirname(image_path))
+
+class EUROPEANA_PT_Panel(bpy.types.Panel):
+    """Creates a Panel in Blender's Sidebar"""
+    bl_label = "Europeana Image Importer"
+    bl_idname = "EUROPEANA_PT_panel"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = "Image Importer"
+
+    def draw(self, context):
+        layout = self.layout
+
+        # Search Bar
+        row = layout.row()
+        row.prop(context.scene, "europeana_search_query", text="Search")
+        row.operator("image.fetch_europeana", text="Search")
+
+        # Display Thumbnails
+        for img_data in image_data_cache:
+            row = layout.row()
+            row.template_icon(icon_value=0, scale=6.0)  # Blender doesn't support web images natively in UI
+
+            op = row.operator("image.import_europeana", text="Import")
+            op.image_url = img_data["full_url"]
+
+def register():
+    bpy.types.Scene.europeana_search_query = bpy.props.StringProperty(
+        name="Europeana Search", default="art"
+    )
+
+    bpy.utils.register_class(FetchEuropeanaImagesOperator)
+    bpy.utils.register_class(ImportEuropeanaImageOperator)
+    bpy.utils.register_class(EUROPEANA_PT_Panel)
+
+def unregister():
+    del bpy.types.Scene.europeana_search_query
+
+    bpy.utils.unregister_class(FetchEuropeanaImagesOperator)
+    bpy.utils.unregister_class(ImportEuropeanaImageOperator)
+    bpy.utils.unregister_class(EUROPEANA_PT_Panel)
+
+if __name__ == "__main__":
+    register()
