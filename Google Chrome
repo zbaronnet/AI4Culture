@@ -8,20 +8,20 @@ from selenium.webdriver.chrome.webdriver import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Set up Chrome WebDriver
-CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"  # Change path if needed
+# Setup Chrome WebDriver
+CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"  # Adjust if needed
 options = Options()
 options.add_argument("--start-maximized")
 service = Service(CHROMEDRIVER_PATH)
 driver = webdriver.Chrome(service=service, options=options)
 
-# File Paths (Change 'yourusername' to match your system)
+# File Paths (Replace 'yourusername' with your actual username)
 DOWNLOADS_PATH = f"/Users/yourusername/Downloads/"
 EUROPEANA_IMAGE = os.path.join(DOWNLOADS_PATH, "europeana_image.jpg")
 CROPPED_IMAGE = os.path.join(DOWNLOADS_PATH, "cropped_image.jpg")
 MONSTER_MASH_MODEL = os.path.join(DOWNLOADS_PATH, "monstermash_3d_model.obj")
 
-API_KEY = "nanodydecti"
+API_KEY = "your_europeana_api_key"
 QUERY = "sculpture"
 SEGMENT_ANYTHING_URL = "https://segment-anything.com/"
 MONSTER_MASH_URL = "https://monstermash.zone/"
@@ -61,7 +61,7 @@ def segment_image():
 
     time.sleep(5)
 
-### Step 3: Upload Cropped Image to Monster Mash
+### Step 3: Upload Cropped Image to Monster Mash (Create Layer from Mesh)
 def upload_to_monster_mash():
     driver.get(MONSTER_MASH_URL)
 
@@ -73,38 +73,33 @@ def upload_to_monster_mash():
 
     time.sleep(5)
     
+    # Select "Create Layer from Mesh"
+    create_layer_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Create Layer from Mesh')]"))
+    )
+    create_layer_button.click()
+    print("Clicked 'Create Layer from Mesh'")
+
+    time.sleep(5)
+
+    # Click Inflate Button
     inflate_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Inflate')]")
     inflate_button.click()
     print("Inflate button clicked!")
 
     time.sleep(10)
 
+    # Export 3D Model
     export_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Download')]")
     export_button.click()
     print(f"3D Model saved: {MONSTER_MASH_MODEL}")
 
     time.sleep(5)
 
-### Step 4: Import into Blender
-def import_to_blender():
-    BLENDER_SCRIPT = f"""
-import bpy
-bpy.ops.import_scene.obj(filepath="{MONSTER_MASH_MODEL}")
-bpy.ops.object.shade_smooth()
-print("3D Model imported successfully into Blender!")
-"""
-    blender_script_path = os.path.join(DOWNLOADS_PATH, "import_model.py")
-    
-    with open(blender_script_path, "w") as script_file:
-        script_file.write(BLENDER_SCRIPT)
-    
-    os.system(f"blender --background --python {blender_script_path}")
-
 ### Run Automation
 download_europeana_image()
 segment_image()
 upload_to_monster_mash()
-import_to_blender()
 
 driver.quit()
 print("Chrome Automation Completed!")
