@@ -1,0 +1,86 @@
+import requests
+import json
+from urllib.parse import unquote
+
+# Europeana API Key (Replace with your actual key)
+API_KEY = "nanodydecti"
+QUERY = "sculpture" 
+
+# Europeana Search API
+url = f"https://api.europeana.eu/record/v2/search.json?query={QUERY}&rows=1&wskey={API_KEY}"
+
+response = requests.get(url)
+data = response.json()
+
+# Extract image URL properly
+if "items" in data and data["items"]:
+    image_url = data["items"][0].get("edmPreview")
+
+    # Fix potential list issue
+    if isinstance(image_url, list):
+        image_url = image_url[0]
+
+    # Decode URL encoding (if necessary)
+    image_url = unquote(image_url)
+    print("Downloading Image:", image_url)
+
+    # Validate and download the image
+    if image_url.startswith("http"):
+        img_data = requests.get(image_url).content
+        with open("/Users/yourusername/Downloads/europeana_image.jpg", "wb") as img_file:
+            img_file.write(img_data)
+        print("Image saved as europeana_image.jpg")
+    else:
+        print("Invalid image URL:", image_url)
+else:
+    print("No images found.")
+
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.webdriver import Options
+
+CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"
+IMAGE_PATH = "/Users/yourusername/Downloads/europeana_image.jpg"
+
+options = Options()
+options.add_argument("--start-maximized")
+
+service = Service(CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service, options=options)
+
+driver.get("https://monstermash.zone/")
+time.sleep(3)  # Wait for page to load
+
+upload_button = driver.find_element(By.XPATH, "//input[@type='file']")
+upload_button.send_keys(IMAGE_PATH)  
+print("Image uploaded successfully!")
+
+time.sleep(5)  # Wait for upload
+
+inflate_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Inflate')]")
+inflate_button.click()
+print("Inflate button clicked!")
+
+time.sleep(10)  # Wait for 3D model processing
+
+export_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Download')]")
+export_button.click()
+print("3D Model exported successfully!")
+
+time.sleep(5)
+driver.quit()
+
+import bpy
+
+# Import the Monster Mash 3D model
+bpy.ops.import_scene.gltf(filepath="C:/path/to/monster_mash_model.glb")
+
+# Scale and position it
+obj = bpy.context.selected_objects[0]
+obj.scale = (2, 2, 2)
+obj.location = (0, 0, 0)
+
+print("Monster Mash model imported into Blender!")
+
