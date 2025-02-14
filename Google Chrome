@@ -21,7 +21,7 @@ EUROPEANA_IMAGE = os.path.join(DOWNLOADS_PATH, "europeana_image.jpg")
 CROPPED_IMAGE = os.path.join(DOWNLOADS_PATH, "cropped_image.jpg")
 MONSTER_MASH_MODEL = os.path.join(DOWNLOADS_PATH, "monstermash_3d_model.obj")
 
-API_KEY = "your_europeana_api_key"
+API_KEY = "nanodydecti"
 QUERY = "sculpture"
 SEGMENT_ANYTHING_URL = "https://segment-anything.com/"
 MONSTER_MASH_URL = "https://monstermash.zone/"
