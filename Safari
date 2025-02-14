@@ -1,4 +1,4 @@
-import os
+mport os
 import time
 import requests
 from selenium import webdriver
@@ -7,10 +7,10 @@ from selenium.webdriver.safari.service import Service as SafariService
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Enable Safari Automation: Run this in Terminal
+# Enable Safari Automation: Run this in Terminal first
 # safaridriver --enable
 
-# Set up Safari WebDriver
+# Setup Safari WebDriver
 driver = webdriver.Safari(service=SafariService())
 driver.maximize_window()
 
@@ -60,7 +60,7 @@ def segment_image():
 
     time.sleep(5)
 
-### Step 3: Upload Cropped Image to Monster Mash
+### Step 3: Upload Cropped Image to Monster Mash (Create Layer from Mesh)
 def upload_to_monster_mash():
     driver.get(MONSTER_MASH_URL)
 
@@ -72,6 +72,12 @@ def upload_to_monster_mash():
 
     time.sleep(5)
     
+    create_layer_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Create Layer from Mesh')]")
+    create_layer_button.click()
+    print("Clicked 'Create Layer from Mesh'")
+
+    time.sleep(5)
+
     inflate_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Inflate')]")
     inflate_button.click()
     print("Inflate button clicked!")
