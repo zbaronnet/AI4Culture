@@ -168,25 +168,16 @@ def upload_to_huggingface():
 
 ### Step 4: Import into Blender
 def import_to_blender():
-    BLENDER_SCRIPT = f"""
-import bpy
-bpy.ops.import_scene.obj(filepath="{MONSTER_MASH_MODEL}")
-bpy.ops.object.shade_smooth()
-print("3D Model imported successfully into Blender!")
-"""
-    blender_script_path = os.path.join(DOWNLOADS_PATH, "import_model.py")
-    
-    with open(blender_script_path, "w") as script_file:
-        script_file.write(BLENDER_SCRIPT)
-    
-    os.system(f"blender --background --python {blender_script_path}")
+    bpy.ops.import_scene.gltf(filepath=HUGGINFACE_GLB_MODEL)
+    print("3D Model imported successfully into Blender!")
+
 
 ### Run Automation
 print('hello world')
 download_europeana_image()
 segment_image()
 upload_to_huggingface()
-#import_to_blender()
+import_to_blender()
 
 driver.quit()
 print("Chrome Automation Completed!")
