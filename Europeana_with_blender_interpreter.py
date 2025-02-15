@@ -3,21 +3,41 @@ import sys
 # Paths may differ based on the machine that you are working
 # $ export PATH_TO_BLENDER=/Applications/Blender.app
 # $ export PATH_TO_EXTRA_BLENDER_MODULES=/Users/lara/Python/Blender
-# $ $PATH_TO_BLENDER/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/selenium selenium
+# $ export PYTHONPATH=PATH_TO_BLENDER/Contents/Resources/4.3/python/lib/python3.11/site-packages
 # $ $PATH_TO_BLENDER/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/Segment-Anything git+https://github.com/facebookresearch/segment-anything.git
-# $ /Applications/Blender.app/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/OpenCV opencv-python pycocotools
+# $ export PYTHONPATH=$PYTHONPATH:$PATH_TO_EXTRA_BLENDER_MODULES/Segment-Anything
+# $ $PATH_TO_BLENDER/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/PyTorch torch torchvision
+# $ export PYTHONPATH=$PYTHONPATH:$PATH_TO_EXTRA_BLENDER_MODULES/PyTorch
+# $ $PATH_TO_BLENDER/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/OpenCV opencv-python pycocotools
+# $ export PYTHONPATH=$PYTHONPATH:$PATH_TO_EXTRA_BLENDER_MODULES/OpenCV
+# $ $PATH_TO_BLENDER/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/Polygon shapely
+# $ export PYTHONPATH=$PYTHONPATH:$PATH_TO_EXTRA_BLENDER_MODULES/Polygon
+# $ $PATH_TO_BLENDER/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/selenium selenium
+# $ export PYTHONPATH=$PYTHONPATH:$PATH_TO_EXTRA_BLENDER_MODULES/selenium
 
-PATH_TO_EXTRA_MODULES="/Users/lara/Python/Blender"
-sys.path.append(PATH_TO_EXTRA_MODULES)
+MODELS = "/Users/lara/Python/Blender/Models/"
 PATH_TO_SEGMENT_ANYTHING="/Users/lara/Python/Blender/Segment-Anything"
 sys.path.append(PATH_TO_SEGMENT_ANYTHING)
+PATH_TO_EXTRA_MODULES="/Users/lara/Python/Blender/PyTorch"
+sys.path.append(PATH_TO_EXTRA_MODULES)
 PATH_TO_OPENCV="/Users/lara/Python/Blender/OpenCV"
 sys.path.append(PATH_TO_OPENCV)
+PATH_TO_POLYGON="/Users/lara/Python/Blender/Polygon"
+sys.path.append(PATH_TO_POLYGON)
+PATH_TO_SELENIUM="/Users/lara/Python/Blender/selenium"
+sys.path.append(PATH_TO_SELENIUM
 
 import os
 import time
 import requests
 import numpy as np
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.webdriver import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 import cv2
 from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
@@ -30,11 +50,11 @@ from PIL import Image
 DOWNLOADS_PATH = f"/Users/lara/Downloads/"
 EUROPEANA_IMAGE = os.path.join(DOWNLOADS_PATH, "europeana_image.jpg")
 CROPPED_IMAGE = os.path.join(DOWNLOADS_PATH, "cropped_image.jpg")
-MONSTER_MASH_MODEL = os.path.join(DOWNLOADS_PATH, "monstermash_3d_model.obj")
+HUGGINFACE_MODEL = os.path.join(DOWNLOADS_PATH, "sample.glb")
 
 API_KEY = "my_europeana_key"
 QUERY = "sculpture"
-#MONSTER_MASH_URL = "https://monstermash.zone/"
+HUGGINFACE_URL = "https://huggingface.co/spaces/kushbhargav/3dImages"
 
 ### Step 1: Download Image from Europeana
 def download_europeana_image():
@@ -109,29 +129,42 @@ def segment_image():
     cut_image.save(filename)
     print('cut out image file was created: ', filename)
 
-### Step 3: Upload Cropped Image to Monster Mash
-def upload_to_monster_mash():
-    driver.get(MONSTER_MASH_URL)
-
+### Step 3: Upload Cropped Image to Huggingface
+def upload_to_huggingface():
+    driver.get(HUGGINFACE_URL)
+    driver.switch_to.frame(0)
+    
     upload_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
     )
+    print(CROPPED_IMAGE)
     upload_button.send_keys(CROPPED_IMAGE)
-    print("Cropped image uploaded to Monster Mash!")
+    print("Cropped image uploaded to HuggingFace!")
 
     time.sleep(5)
     
-    inflate_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Inflate')]")
+    inflate_button = driver.find_element(By.XPATH, "//button[text()='Generate']")
     inflate_button.click()
-    print("Inflate button clicked!")
+    print("Generate button clicked!")
 
-    time.sleep(10)
+    time.sleep(60)
+    
+    inflate_button = driver.find_element(By.XPATH, "//button[text()='Extract GLB']")
+    inflate_button.click()
+    print("Extract button clicked!")
+    
+    time.sleep(60)
 
-    export_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Download')]")
+    export_button = driver.find_element(By.XPATH, "//button[text()='Download GLB']")
     export_button.click()
-    print(f"3D Model saved: {MONSTER_MASH_MODEL}")
 
     time.sleep(5)
+    
+    if os.path.isfile(HUGGINFACE_GLB_MODEL):
+        print(f"3D Model saved: {HUGGINFACE_GLB_MODEL}")
+    else:
+        print("No Model was downloaded")
+
 
 ### Step 4: Import into Blender
 def import_to_blender():
@@ -152,8 +185,8 @@ print("3D Model imported successfully into Blender!")
 print('hello world')
 download_europeana_image()
 segment_image()
-#upload_to_monster_mash()
+upload_to_huggingface()
 #import_to_blender()
 
-#driver.quit()
-#print("Chrome Automation Completed!")
+driver.quit()
+print("Chrome Automation Completed!")
