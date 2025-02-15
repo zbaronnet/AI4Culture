@@ -18,24 +18,13 @@ import os
 import time
 import requests
 import numpy as np
-#from selenium import webdriver
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.chrome.service import Service
-#from selenium.webdriver.chrome.webdriver import Options
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
 
 import cv2
 from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
 from pycocotools import mask as mask_utils
-
-
-# Set up Chrome WebDriver
-#CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"  # Change path if needed
-#options = Options()
-#options.add_argument("--start-maximized")
-#service = Service(CHROMEDRIVER_PATH)
-#driver = webdriver.Chrome(service=service, options=options)
+from shapely.geometry import Polygon
+from shapely.geometry import Point
+from PIL import Image
 
 # File Paths (Change 'yourusername' to match your system)
 DOWNLOADS_PATH = f"/Users/lara/Downloads/"
@@ -43,10 +32,9 @@ EUROPEANA_IMAGE = os.path.join(DOWNLOADS_PATH, "europeana_image.jpg")
 CROPPED_IMAGE = os.path.join(DOWNLOADS_PATH, "cropped_image.jpg")
 MONSTER_MASH_MODEL = os.path.join(DOWNLOADS_PATH, "monstermash_3d_model.obj")
 
-API_KEY = "nanodydecti"
+API_KEY = "my_europeana_key"
 QUERY = "sculpture"
-SEGMENT_ANYTHING_URL = "https://segment-anything.com/"
-MONSTER_MASH_URL = "https://monstermash.zone/"
+#MONSTER_MASH_URL = "https://monstermash.zone/"
 
 ### Step 1: Download Image from Europeana
 def download_europeana_image():
@@ -78,52 +66,48 @@ def segment_image():
     output_directory = '/Users/lara/Downloads/'
     
     # source https://github.com/ultralytics/ultralytics/issues/7177
-    for i in range(0,len(masks)):
+    print("Masks were generated. Creating cropped image from first mask")
+    mask = masks[0]["segmentation"]
+    if isinstance(mask, np.ndarray) and mask.dtype == bool:
+        mask = mask_utils.encode(np.asfortranarray(mask))
+    else:
+        print("invalid segmentation format: ", mask)
+    
+    mask = mask_utils.decode(mask)
+
+    # Get contours of mask
     # https://github.com/facebookresearch/segment-anything/issues/121
-    
-    #height, width, channels = image.shape
-    
-    #cutoutImage = image
-    
-    #for y in range(height):
-    #    for x in range(width):
-    #        if masks[0]["segmentation"][y][x] == False:
-    #            cutoutImage[y,x] = (0, 0, 0)
-    
-        mask = masks[i]["segmentation"]
-        if isinstance(mask, np.ndarray) and mask.dtype == bool:
-            mask = mask_utils.encode(np.asfortranarray(mask))
-        else:
-            print("invalid segmentation format: ", mask)
-    
-        mask = mask_utils.decode(mask)
-        contours, hierarch = cv2.findContours(mask.astype(np.uint8), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    #    print(contours)
-    #xywh = cv2.boundingRect(contour_list[0])
-    #print(xywh)
-    #y1_y2_x1_x2 =(y, y+h, x, x+w)
-    
-        cropped_image = cv2.drawContours(image, contours, -1, (0,0,0), 3)
-        
-    #    cropped_image = cv2.bitwise_and(image, image, )
-        
-        
-        filename = os.path.join(output_directory, str(i) + '.png')
-        cv2.imwrite(filename, cropped_image)
-    #driver.get(SEGMENT_ANYTHING_URL)
-    #upload_button = WebDriverWait(driver, 10).until(
-    #    EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
-    #)
-    #upload_button.send_keys(EUROPEANA_IMAGE)
-    #print("Image uploaded to Segment Anything!")
+    contours, hierarch = cv2.findContours(mask.astype(np.uint8), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = [np.squeeze(contour) for contour in contours] # Convert contours to the correct shape
+    contours = [np.atleast_2d(contour) for contour in contours]
 
-    #time.sleep(10)
-
-    #download_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Download')]")
-    #download_button.click()
-    #print(f"Cropped image saved: {CROPPED_IMAGE}")
-
-    #time.sleep(5)
+    # Create polygon form contours
+    polygon = Polygon(contours[0])
+    print('polygon created')
+    
+    # Crop image using Pillow
+    # Source https://gist.github.com/yosemitebandit/03bb3ae302582d9dc6be
+    pixels = np.array(im)
+    im_copy = np.array(im)
+    
+    for index, pixel in np.ndenumerate(pixels):
+        # Unpack the index.
+        row, col, channel = index
+        # We only need to look at spatial pixel data for one of the four channels.
+        if channel != 0:
+            continue
+        point = Point(col, row)
+        if not polygon.contains(point):
+            im_copy[(row, col, 0)] = 255
+            im_copy[(row, col, 1)] = 255
+            im_copy[(row, col, 2)] = 255
+            im_copy[(row, col, 3)] = 0
+        
+        
+    filename = os.path.join(output_directory, 'Europeana_cut-out_image' + '.png')
+    cut_image = Image.fromarray(im_copy)
+    cut_image.save(filename)
+    print('cut out image file was created: ', filename)
 
 ### Step 3: Upload Cropped Image to Monster Mash
 def upload_to_monster_mash():
