@@ -55,10 +55,10 @@ service = Service(CHROMEDRIVER_PATH)
 driver = webdriver.Chrome(service=service, options=options)
 
 # File Paths (Change 'yourusername' to match your system)
-DOWNLOADS_PATH = f"/Users/lara/Downloads/"
-EUROPEANA_IMAGE = os.path.join(DOWNLOADS_PATH, "europeana_image.jpg")
-CROPPED_IMAGE = os.path.join(DOWNLOADS_PATH, "Europeana_cut-out_image.png")
-HUGGINFACE_MODEL = os.path.join(DOWNLOADS_PATH, "sample.glb")
+OUTPUT_PATH = f"/Users/lara/Downloads/"
+EUROPEANA_IMAGE = os.path.join(OUTPUT_PATH, "europeana_image.jpg")
+CROPPED_IMAGE = os.path.join(OUTPUT_PATH, "Europeana_cut-out_image.png")
+HUGGINFACE_MODEL = os.path.join(OUTPUT_PATH, "sample.glb")
 
 MODELS = "/Users/lara/Python/Blender/Models/"
 
@@ -93,8 +93,6 @@ def segment_image():
     sam = sam_model_registry["vit_h"](checkpoint=os.path.join(MODELS, "sam_vit_h_4b8939.pth")
     mask_generator = SamAutomaticMaskGenerator(sam)
     masks = mask_generator.generate(image)
-    
-    output_directory = '/Users/lara/Downloads/'
     
     # source https://github.com/ultralytics/ultralytics/issues/7177
     print("Masks were generated. Creating cropped image from first mask")
@@ -135,7 +133,7 @@ def segment_image():
             im_copy[(row, col, 3)] = 0
         
         
-    filename = os.path.join(output_directory, 'Europeana_cut-out_image' + '.png')
+    filename = os.path.join(OUTPUT_PATH, 'Europeana_cut-out_image' + '.png')
     cut_image = Image.fromarray(im_copy)
     cut_image.save(filename)
     print('cut out image file was created: ', filename)
