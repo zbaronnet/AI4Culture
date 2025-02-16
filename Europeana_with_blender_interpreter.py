@@ -15,7 +15,6 @@ import sys
 # $ $PATH_TO_BLENDER/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/selenium selenium
 # $ export PYTHONPATH=$PYTHONPATH:$PATH_TO_EXTRA_BLENDER_MODULES/selenium
 
-MODELS = "/Users/lara/Python/Blender/Models/"
 PATH_TO_SEGMENT_ANYTHING="/Users/lara/Python/Blender/Segment-Anything"
 sys.path.append(PATH_TO_SEGMENT_ANYTHING)
 PATH_TO_EXTRA_MODULES="/Users/lara/Python/Blender/PyTorch"
@@ -61,6 +60,8 @@ EUROPEANA_IMAGE = os.path.join(DOWNLOADS_PATH, "europeana_image.jpg")
 CROPPED_IMAGE = os.path.join(DOWNLOADS_PATH, "Europeana_cut-out_image.png")
 HUGGINFACE_MODEL = os.path.join(DOWNLOADS_PATH, "sample.glb")
 
+MODELS = "/Users/lara/Python/Blender/Models/"
+
 API_KEY = "my_europeana_key"
 QUERY = "sculpture"
 HUGGINFACE_URL = "https://huggingface.co/spaces/kushbhargav/3dImages"
@@ -89,7 +90,7 @@ def segment_image():
     image = cv2.imread(EUROPEANA_IMAGE, cv2.IMREAD_COLOR)
     im = Image.open(EUROPEANA_IMAGE).convert('RGBA')
     
-    sam = sam_model_registry["vit_h"](checkpoint="/Users/lara/Downloads/sam_vit_h_4b8939.pth")
+    sam = sam_model_registry["vit_h"](checkpoint=os.path.join(MODELS, "sam_vit_h_4b8939.pth")
     mask_generator = SamAutomaticMaskGenerator(sam)
     masks = mask_generator.generate(image)
     
