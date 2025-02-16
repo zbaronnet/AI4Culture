@@ -140,6 +140,9 @@ def segment_image():
 ### Step 3: Upload Cropped Image to Huggingface
 def upload_to_huggingface():
     driver.get(HUGGINFACE_URL)
+
+    time.sleep(10)
+
     driver.switch_to.frame(0)
     
     upload_button = WebDriverWait(driver, 10).until(
@@ -168,15 +171,15 @@ def upload_to_huggingface():
 
     time.sleep(5)
     
-    if os.path.isfile(HUGGINFACE_GLB_MODEL):
-        print(f"3D Model saved: {HUGGINFACE_GLB_MODEL}")
+    if os.path.isfile(HUGGINFACE_MODEL):
+        print(f"3D Model saved: {HUGGINFACE_MODEL}")
     else:
         print("No Model was downloaded")
 
 
 ### Step 4: Import into Blender
 def import_to_blender():
-    bpy.ops.import_scene.gltf(filepath=HUGGINFACE_GLB_MODEL)
+    bpy.ops.import_scene.gltf(filepath=HUGGINFACE_MODEL)
     print("3D Model imported successfully into Blender!")
 
 
