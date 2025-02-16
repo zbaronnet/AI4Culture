@@ -1,6 +1,7 @@
 # AI4Culture
 
 ## Installing (MacOS)
+
 ### Set environment variables
 
 ```
@@ -20,6 +21,8 @@ export EXTRA_BLENDER_MODULES=PATH_EXTERNAL_BLENDER_DIR/Blender
 ### Install dependencies for 3d model step
 #### With Selenium
 ```
+# install Chromedriver with HomeBrew
+# install Selenium with pip
 ```
 
 #### With CUDA
