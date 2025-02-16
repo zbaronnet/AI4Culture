@@ -56,7 +56,7 @@ driver = webdriver.Chrome(service=service, options=options)
 # File Paths (Change 'yourusername' to match your system)
 DOWNLOADS_PATH = f"/Users/lara/Downloads/"
 EUROPEANA_IMAGE = os.path.join(DOWNLOADS_PATH, "europeana_image.jpg")
-CROPPED_IMAGE = os.path.join(DOWNLOADS_PATH, "Europeana_cut-out_image.jpg")
+CROPPED_IMAGE = os.path.join(DOWNLOADS_PATH, "Europeana_cut-out_image.png")
 HUGGINFACE_MODEL = os.path.join(DOWNLOADS_PATH, "sample.glb")
 
 API_KEY = "my_europeana_key"
