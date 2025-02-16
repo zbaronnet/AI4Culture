@@ -25,7 +25,7 @@ sys.path.append(PATH_TO_OPENCV)
 PATH_TO_POLYGON="/Users/lara/Python/Blender/Polygon"
 sys.path.append(PATH_TO_POLYGON)
 PATH_TO_SELENIUM="/Users/lara/Python/Blender/selenium"
-sys.path.append(PATH_TO_SELENIUM
+sys.path.append(PATH_TO_SELENIUM)
 
 import os
 import time
