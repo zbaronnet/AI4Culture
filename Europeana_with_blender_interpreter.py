@@ -46,6 +46,13 @@ from shapely.geometry import Polygon
 from shapely.geometry import Point
 from PIL import Image
 
+# Set up Chrome WebDriver
+CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"  # Change path if needed
+options = Options()
+options.add_argument("--start-maximized")
+service = Service(CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service, options=options)
+
 # File Paths (Change 'yourusername' to match your system)
 DOWNLOADS_PATH = f"/Users/lara/Downloads/"
 EUROPEANA_IMAGE = os.path.join(DOWNLOADS_PATH, "europeana_image.jpg")
