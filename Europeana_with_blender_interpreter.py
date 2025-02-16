@@ -85,6 +85,7 @@ def download_europeana_image():
 ### Step 2: Crop Image with Segment Anything
 def segment_image():
     image = cv2.imread(EUROPEANA_IMAGE, cv2.IMREAD_COLOR)
+    im = Image.open(EUROPEANA_IMAGE).convert('RGBA')
     
     sam = sam_model_registry["vit_h"](checkpoint="/Users/lara/Downloads/sam_vit_h_4b8939.pth")
     mask_generator = SamAutomaticMaskGenerator(sam)
