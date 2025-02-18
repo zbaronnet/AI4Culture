@@ -1,17 +1,21 @@
 # Make sure all the dependencies are installed
 # If you used the install script you can use the following lines to set the environment
 # If you get your dependicies in another way please comment out lines 4-14
-import sys
-# Replace {USER} with your user on the machine that you are running The Path is not set correctly otherwise. 
-PATH_TO_SEGMENT_ANYTHING="/Users/{USER}/Python/Blender/Segment-Anything"
+
+# add the user to your machine here. 
+# You can find your user by running `echo $USER` in the terminal
+machine_user = ''
+
+import sys 
+PATH_TO_SEGMENT_ANYTHING="/Users/machine_user/Python/Blender/Segment-Anything"
 sys.path.append(PATH_TO_SEGMENT_ANYTHING)
-PATH_TO_EXTRA_MODULES="/Users/{USER}/Python/Blender/PyTorch"
+PATH_TO_EXTRA_MODULES="/Users/machine_user/Python/Blender/PyTorch"
 sys.path.append(PATH_TO_EXTRA_MODULES)
-PATH_TO_OPENCV="/Users/{USER}/Python/Blender/OpenCV"
+PATH_TO_OPENCV="/Users/machine_user/Python/Blender/OpenCV"
 sys.path.append(PATH_TO_OPENCV)
-PATH_TO_POLYGON="/Users/{USER}/Python/Blender/Polygon"
+PATH_TO_POLYGON="/Users/machine_user/Python/Blender/Polygon"
 sys.path.append(PATH_TO_POLYGON)
-PATH_TO_SELENIUM="/Users/{USER}/Python/Blender/selenium"
+PATH_TO_SELENIUM="/Users/machine_user/Python/Blender/selenium"
 sys.path.append(PATH_TO_SELENIUM)
 
 import os
@@ -36,15 +40,15 @@ from shapely.geometry import Point
 from PIL import Image
 
 # Path to AI models
-MODELS = "/Users/$USER/Python/Blender/Models/"
+MODELS = "/Users/machine_user/Python/Blender/Models/"
 
 # Path to chrome driver
 # Change path if needed. you can check the path by running `which chromedriver` in your terminal.
 CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"  
 
 # Set OutPut path
-OUTPUT_PATH = f"/Users/$USER/Downloads/"
-DOWNLOAD_PATH = f"/Users/$USER/Downloads/"
+OUTPUT_PATH = f"/Users/machine_user/Downloads/"
+DOWNLOAD_PATH = f"/Users/machine_user/Downloads/"
 
 # EuroPeana API key
 # Add you API Key
