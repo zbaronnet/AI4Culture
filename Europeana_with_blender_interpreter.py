@@ -2,15 +2,15 @@
 # If you used the install script you can use the following lines to set the environment
 # If you get your dependicies in another way please comment out lines 4-14
 import sys
-PATH_TO_SEGMENT_ANYTHING="/Users/lara/Python/Blender/Segment-Anything"
+PATH_TO_SEGMENT_ANYTHING="/Users/$USER/Python/Blender/Segment-Anything"
 sys.path.append(PATH_TO_SEGMENT_ANYTHING)
-PATH_TO_EXTRA_MODULES="/Users/lara/Python/Blender/PyTorch"
+PATH_TO_EXTRA_MODULES="/Users/$USER/Python/Blender/PyTorch"
 sys.path.append(PATH_TO_EXTRA_MODULES)
-PATH_TO_OPENCV="/Users/lara/Python/Blender/OpenCV"
+PATH_TO_OPENCV="/Users/$USER/Python/Blender/OpenCV"
 sys.path.append(PATH_TO_OPENCV)
-PATH_TO_POLYGON="/Users/lara/Python/Blender/Polygon"
+PATH_TO_POLYGON="/Users/$USER/Python/Blender/Polygon"
 sys.path.append(PATH_TO_POLYGON)
-PATH_TO_SELENIUM="/Users/lara/Python/Blender/selenium"
+PATH_TO_SELENIUM="/Users/$USER/Python/Blender/selenium"
 sys.path.append(PATH_TO_SELENIUM)
 
 import os
@@ -35,14 +35,14 @@ from shapely.geometry import Point
 from PIL import Image
 
 # Path to AI models
-MODELS = "/Users/lara/Python/Blender/Models/"
+MODELS = "/Users/$USER/Python/Blender/Models/"
 
 # Path to chrome driver
 CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"  # Change path if needed
 
 # Set OutPut path
-OUTPUT_PATH = f"/Users/lara/Downloads/"
-DOWNLOAD_PATH = f"/Users/lara/Downloads/"
+OUTPUT_PATH = f"/Users/$USER/Downloads/"
+DOWNLOAD_PATH = f"/Users/$USER/Downloads/"
 
 # EuroPeana API key
 EUROPEANA_KEY = 'API_KEY'
