@@ -40,7 +40,7 @@ from shapely.geometry import Point
 from PIL import Image
 
 # Path to AI models
-MODELS = "/Users/machine_user/Python/Blender/Models/"
+MODELS = f"/Users/{machine_user}/Python/Blender/Models/"
 
 # Path to chrome driver
 # Change path if needed. you can check the path by running `which chromedriver` in your terminal.
