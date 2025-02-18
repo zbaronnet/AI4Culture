@@ -7,15 +7,15 @@
 machine_user = ''
 
 import sys 
-PATH_TO_SEGMENT_ANYTHING="/Users/machine_user/Python/Blender/Segment-Anything"
+PATH_TO_SEGMENT_ANYTHING=f"/Users/{machine_user}/Python/Blender/Segment-Anything"
 sys.path.append(PATH_TO_SEGMENT_ANYTHING)
-PATH_TO_EXTRA_MODULES="/Users/machine_user/Python/Blender/PyTorch"
+PATH_TO_EXTRA_MODULES=f"/Users/{machine_user}/Python/Blender/PyTorch"
 sys.path.append(PATH_TO_EXTRA_MODULES)
-PATH_TO_OPENCV="/Users/machine_user/Python/Blender/OpenCV"
+PATH_TO_OPENCV=f"/Users/{machine_user}/Python/Blender/OpenCV"
 sys.path.append(PATH_TO_OPENCV)
-PATH_TO_POLYGON="/Users/machine_user/Python/Blender/Polygon"
+PATH_TO_POLYGON=f"/Users/{machine_user}/Python/Blender/Polygon"
 sys.path.append(PATH_TO_POLYGON)
-PATH_TO_SELENIUM="/Users/machine_user/Python/Blender/selenium"
+PATH_TO_SELENIUM=f"/Users/{machine_user}/Python/Blender/selenium"
 sys.path.append(PATH_TO_SELENIUM)
 
 import os
@@ -47,8 +47,8 @@ MODELS = "/Users/machine_user/Python/Blender/Models/"
 CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"  
 
 # Set OutPut path
-OUTPUT_PATH = f"/Users/machine_user/Downloads/"
-DOWNLOAD_PATH = f"/Users/machine_user/Downloads/"
+OUTPUT_PATH = f"/Users/{machine_user}/Downloads/"
+DOWNLOAD_PATH = f"/Users/{machine_user}/Downloads/"
 
 # EuroPeana API key
 # Add you API Key
