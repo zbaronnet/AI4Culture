@@ -6,6 +6,9 @@ export PATH_TO_BLENDER=/Applications/Blender.app
 export PATH_TO_EXTRA_BLENDER_MODULES=/Users/$USER/Python/Blender
 export PYTHONPATH=PATH_TO_BLENDER/Contents/Resources/4.3/python/lib/python3.11/site-packages
 
+mkdir /Users/$USER/Python
+mkdir $PATH_TO_EXTRA_BLENDER_MODULES
+
 # Installing segment-anything
 $PATH_TO_BLENDER/Contents/Resources/4.3/python/bin/python3.11 -m pip install --target $PATH_TO_EXTRA_BLENDER_MODULES/Segment-Anything git+https://github.com/facebookresearch/segment-anything.git
 export PYTHONPATH=$PYTHONPATH:$PATH_TO_EXTRA_BLENDER_MODULES/Segment-Anything
