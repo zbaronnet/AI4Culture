@@ -4,7 +4,7 @@
 # Please set path to the desired location in your filesystem
 export PATH_TO_BLENDER=/Applications/Blender.app
 export PATH_TO_EXTRA_BLENDER_MODULES=/Users/$USER/Python/Blender
-export PYTHONPATH=PATH_TO_BLENDER/Contents/Resources/4.3/python/lib/python3.11/site-packages
+export PYTHONPATH=$PATH_TO_BLENDER/Contents/Resources/4.3/python/lib/python3.11/site-packages
 
 mkdir /Users/$USER/Python
 mkdir $PATH_TO_EXTRA_BLENDER_MODULES
