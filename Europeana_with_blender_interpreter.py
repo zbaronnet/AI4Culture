@@ -2,15 +2,16 @@
 # If you used the install script you can use the following lines to set the environment
 # If you get your dependicies in another way please comment out lines 4-14
 import sys
-PATH_TO_SEGMENT_ANYTHING="/Users/$USER/Python/Blender/Segment-Anything"
+# Replace {USER} with your user on the machine that you are running The Path is not set correctly otherwise. 
+PATH_TO_SEGMENT_ANYTHING="/Users/{USER}/Python/Blender/Segment-Anything"
 sys.path.append(PATH_TO_SEGMENT_ANYTHING)
-PATH_TO_EXTRA_MODULES="/Users/$USER/Python/Blender/PyTorch"
+PATH_TO_EXTRA_MODULES="/Users/{USER}/Python/Blender/PyTorch"
 sys.path.append(PATH_TO_EXTRA_MODULES)
-PATH_TO_OPENCV="/Users/$USER/Python/Blender/OpenCV"
+PATH_TO_OPENCV="/Users/{USER}/Python/Blender/OpenCV"
 sys.path.append(PATH_TO_OPENCV)
-PATH_TO_POLYGON="/Users/$USER/Python/Blender/Polygon"
+PATH_TO_POLYGON="/Users/{USER}/Python/Blender/Polygon"
 sys.path.append(PATH_TO_POLYGON)
-PATH_TO_SELENIUM="/Users/$USER/Python/Blender/selenium"
+PATH_TO_SELENIUM="/Users/{USER}/Python/Blender/selenium"
 sys.path.append(PATH_TO_SELENIUM)
 
 import os
@@ -38,13 +39,15 @@ from PIL import Image
 MODELS = "/Users/$USER/Python/Blender/Models/"
 
 # Path to chrome driver
-CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"  # Change path if needed
+# Change path if needed. you can check the path by running `which chromedriver` in your terminal.
+CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"  
 
 # Set OutPut path
 OUTPUT_PATH = f"/Users/$USER/Downloads/"
 DOWNLOAD_PATH = f"/Users/$USER/Downloads/"
 
 # EuroPeana API key
+# Add you API Key
 EUROPEANA_KEY = 'API_KEY'
 
 class Create3DModel:
