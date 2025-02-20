@@ -24,9 +24,9 @@ Our research has shown that the open-source software Blender has been widely use
 
 ## Example
 
-![EESSI logo](images/europeana_image.jpg)
-![EESSI logo](images/Europeana_cut-out_image.png)
-![EESSI logo](images/Europeana_3D-generated-model.glb)
+![Europeana image](images/europeana_image.jpg)
+![Extracted Image](images/Europeana_cut-out_image.png)
+![3D model](images/Europeana_3D-generated-model.glb)
 
 ## Installing (MacOS)
 ### Installation script
